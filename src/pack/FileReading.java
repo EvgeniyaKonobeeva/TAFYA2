@@ -15,6 +15,10 @@ public class FileReading {
     private ArrayList<State> statesArr = new ArrayList<>();
     private String regEx = "[a-zA-Z]\\d+,.?=[a-zA-Z]\\d+";
 
+    Pattern patternName = Pattern.compile("[a-zA-Z]");
+    Pattern patternNum = Pattern.compile("\\d+");
+    Pattern patternChar = Pattern.compile(",.=");
+
     public void readFile(String fileName){
         BufferedReader bufferedReader;
         String curLine;
@@ -33,9 +37,6 @@ public class FileReading {
     public void writeToArrays(String str){
         if(!str.matches(regEx))
             return;
-        Pattern patternName = Pattern.compile("[a-zA-Z]");
-        Pattern patternNum = Pattern.compile("\\d+");
-        Pattern patternChar = Pattern.compile(",.?=");
 
         Matcher matcherName = patternName.matcher(str);
         Matcher matcherNum = patternNum.matcher(str);
@@ -45,31 +46,34 @@ public class FileReading {
 
         if(matcherName.find()){
 
-            currentState.setName(matcherName.group(0));
-
             if(matcherNum.find()){
 
                 int index = Integer.valueOf(matcherNum.group(0));
-                addState(currentState, index);
+                if(index == 0){
+                    statesArr.add(index, currentState);
+                    currentState.setName(matcherName.group(0));
+                }else {
+                    if (statesArr.get(index) == null) {
+                        statesArr.add(index, currentState);
+                        currentState.setName(matcherName.group(0));
+                    } else {
+                        currentState = statesArr.get(index);
+                    }
+                }
 
                 if(matcherChar.find()){
-                    String find = matcherChar.group();
-                    find = find.substring(1, find.length()-1);
+                    String find = matcherChar.group(0);
+                    find = find.substring(1, find.length()-2);
 
                     ArrayList<Object> arr = new ArrayList<>();
                     arr.add(0, find);
 
-                    if(matcherName.find()){
-                        int countGr = matcherName.groupCount();
-                        State nextState = new State();
-                        nextState.setName(matcherName.group(countGr - 1));
-
-                        if(matcherNum.find()){
-                            countGr = matcherNum.groupCount();
-                            index = Integer.valueOf(matcherNum.group(countGr-1));
-                            addState(nextState, index);
-                        }
+                    if(matcherNum.find()){
+                        int countGr = matcherNum.groupCount();
+                        index = Integer.valueOf(matcherNum.group(countGr-1));
+                        arr.add(index);
                     }
+                    currentState.addArr(arr);
                 }
             }
         }
@@ -79,8 +83,14 @@ public class FileReading {
     }
 
     private void addState(State state, int index){
-        if(!statesArr.contains(state)){
+        if(statesArr.get(index) == null){
             statesArr.add(index, state);
+        }
+    }
+
+    public void printResult(){
+        for(State st : statesArr){
+            st.printResult();
         }
     }
 

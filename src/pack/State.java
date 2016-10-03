@@ -7,9 +7,10 @@ import java.util.Objects;
  * Created by Evgenia on 02.10.2016.
  */
 public class State {
-    public String name;
-    public boolean final_s = false;
-    public ArrayList<ArrayList> passages = new ArrayList<>();
+    private String name;
+    private boolean final_s = false;
+    private ArrayList<ArrayList> passages = new ArrayList<>();
+
 
     public void setName(String name){
         this.name = name;
@@ -17,8 +18,46 @@ public class State {
     }
 
 
+    public boolean isFinal(){
+        return final_s;
+    }
 
+    public String getName() {
+        return name;
+    }
 
+    public ArrayList<ArrayList> getPassages() {
+        return passages;
+    }
+
+    public void addArr(ArrayList arr){
+        boolean found = false;
+        for(int i = 0; i < passages.size(); i++){
+            ArrayList arr1 = passages.get(i);
+            if(arr1.get(0) == arr.get(0)){
+                arr1.add(arr.get(1));
+                found = true;
+                break;
+            }
+        }
+        if(!found){
+            passages.add(arr);
+        }
+
+    }
+
+    public void printResult(){
+        System.out.println( "name : " + this.name + " is final : " + this.final_s);
+
+        for(int i = 0; i < this.passages.size(); i++){
+            ArrayList arr = this.passages.get(i);
+            System.out.println( (i + 1) + " symbol " + arr.get(0) + " leads to ");
+            for(int j = 1; j < arr.size(); j++){
+                System.out.print(" state number " + arr.get(j) + ", ");
+            }
+        }
+        System.out.println();
+    }
 
     @Override
     public boolean equals(Object obj) {
