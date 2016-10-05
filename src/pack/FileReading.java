@@ -46,10 +46,10 @@ public class FileReading {
         if(!str.matches(regEx))
             return;
 
-         matcherFirstName = patternFirstName.matcher(str);
+        matcherFirstName = patternFirstName.matcher(str);
         matcherSecondName = patternSecondName.matcher(str);
-         matcherNum = patternNum.matcher(str);
-         matcherChar = patternChar.matcher(str);
+        matcherNum = patternNum.matcher(str);
+        matcherChar = patternChar.matcher(str);
 
 
 
@@ -118,23 +118,6 @@ public class FileReading {
 
 
 
-    }
-
-
-    private void chooseStatesType(State state){
-        if(state.isFinal()){
-            putToMap(state, finalStArr);
-        }else{
-            putToMap(state, usualStArr);
-        }
-    }
-
-    private void putToMap(State state, Map map){
-        if(map.containsKey(state.getNumber())){
-            state = (State) map.get(state.getNumber());
-        }else{
-            map.put(state.getNumber(), state);
-        }
     }
 
 
