@@ -1,6 +1,7 @@
 package pack;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Objects;
 
 /**
@@ -9,6 +10,7 @@ import java.util.Objects;
 public class State {
     private String name;
     private boolean final_s = false;
+    private int number;
     private ArrayList<ArrayList> passages = new ArrayList<>();
 
 
@@ -30,30 +32,41 @@ public class State {
         return passages;
     }
 
-    public void addArr(ArrayList arr){
+    public void addArr(Object[] arr){
         boolean found = false;
         for(int i = 0; i < passages.size(); i++){
             ArrayList arr1 = passages.get(i);
-            if(arr1.get(0) == arr.get(0)){
-                arr1.add(arr.get(1));
+            if(arr1.get(0) == arr[0]){
+                arr1.add(arr[1]);
                 found = true;
                 break;
             }
         }
         if(!found){
-            passages.add(arr);
+            ArrayList<Object> list = new ArrayList<>();
+            list.add(arr[0]);
+            list.add(arr[1]);
+            passages.add(list);
         }
 
     }
 
+    public void setNumber(int number) {
+        this.number = number;
+    }
+
+    public int getNumber() {
+        return number;
+    }
+
     public void printResult(){
-        System.out.println( "name : " + this.name + " is final : " + this.final_s);
+        System.out.println( "name : " + this.name + this.number + " is final : " + this.final_s);
 
         for(int i = 0; i < this.passages.size(); i++){
             ArrayList arr = this.passages.get(i);
-            System.out.println( (i + 1) + " symbol " + arr.get(0) + " leads to ");
+            System.out.print( " sym " + arr.get(0) + " --> ");
             for(int j = 1; j < arr.size(); j++){
-                System.out.print(" state number " + arr.get(j) + ", ");
+                System.out.print(((State)arr.get(j)).getName() + ((State)arr.get(j)).getNumber() + " ");
             }
         }
         System.out.println();

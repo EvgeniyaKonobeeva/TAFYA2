@@ -3,8 +3,8 @@ package pack;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Objects;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -12,12 +12,20 @@ import java.util.regex.Pattern;
  * Created by Evgenia on 02.10.2016.
  */
 public class FileReading {
-    private ArrayList<State> statesArr = new ArrayList<>();
+    private Map<Integer, State> usualStArr = new HashMap<>();
+    private Map<Integer, State> finalStArr = new HashMap<>();
+
     private String regEx = "[a-zA-Z]\\d+,.?=[a-zA-Z]\\d+";
 
-    Pattern patternName = Pattern.compile("[a-zA-Z]");
+    Pattern patternFirstName = Pattern.compile("[a-zA-Z]");
+    Pattern patternSecondName = Pattern.compile("=[a-zA-Z]");
     Pattern patternNum = Pattern.compile("\\d+");
     Pattern patternChar = Pattern.compile(",.=");
+
+    Matcher matcherFirstName;
+    Matcher matcherSecondName;
+    Matcher matcherNum;
+    Matcher matcherChar;
 
     public void readFile(String fileName){
         BufferedReader bufferedReader;
@@ -38,42 +46,72 @@ public class FileReading {
         if(!str.matches(regEx))
             return;
 
-        Matcher matcherName = patternName.matcher(str);
-        Matcher matcherNum = patternNum.matcher(str);
-        Matcher matcherChar = patternChar.matcher(str);
+         matcherFirstName = patternFirstName.matcher(str);
+        matcherSecondName = patternSecondName.matcher(str);
+         matcherNum = patternNum.matcher(str);
+         matcherChar = patternChar.matcher(str);
+
+
+
 
         State currentState = new State();
 
-        if(matcherName.find()){
+        if(matcherFirstName.find()){
 
-            if(matcherNum.find()){
+            currentState.setName(matcherFirstName.group());
 
-                int index = Integer.valueOf(matcherNum.group(0));
-                if(index == 0){
-                    statesArr.add(index, currentState);
-                    currentState.setName(matcherName.group(0));
-                }else {
-                    if (statesArr.get(index) == null) {
-                        statesArr.add(index, currentState);
-                        currentState.setName(matcherName.group(0));
-                    } else {
-                        currentState = statesArr.get(index);
+            if(matcherNum.find(matcherFirstName.end())){
+
+                int index = Integer.valueOf(matcherNum.group());
+                currentState.setNumber(index);
+
+
+                if(currentState.isFinal()){
+                    if(finalStArr.containsKey(currentState.getNumber())){
+                        currentState = finalStArr.get(currentState.getNumber());
+                    }else{
+                        finalStArr.put(currentState.getNumber(), currentState);
+                    }
+                }else{
+                    if(usualStArr.containsKey(currentState.getNumber())){
+                        currentState = usualStArr.get(currentState.getNumber());
+                    }else{
+                        usualStArr.put(currentState.getNumber(), currentState);
                     }
                 }
 
                 if(matcherChar.find()){
-                    String find = matcherChar.group(0);
-                    find = find.substring(1, find.length()-2);
+                    String find = matcherChar.group();
+                    find = find.substring(1, find.length()-1);
 
-                    ArrayList<Object> arr = new ArrayList<>();
-                    arr.add(0, find);
+                    Object arr[] = new Object[2];
+                    arr[0] = find;
 
-                    if(matcherNum.find()){
-                        int countGr = matcherNum.groupCount();
-                        index = Integer.valueOf(matcherNum.group(countGr-1));
-                        arr.add(index);
+
+
+                    State nextState = new State();
+                    if(matcherSecondName.find()) {
+                        String secName = matcherSecondName.group();
+                        secName = secName.substring(secName.length()-1);
+                        nextState.setName(secName);
+                        if(matcherNum.find(matcherSecondName.end())) {
+                            index = Integer.valueOf(matcherNum.group());
+                            nextState.setNumber(index);
+
+                            arr[1] = nextState;
+                            currentState.addArr(arr);
+
+                            if (nextState.isFinal()) {
+                                if (!finalStArr.containsKey(nextState.getNumber())) {
+                                    finalStArr.put(nextState.getNumber(), nextState);
+                                }
+                            } else {
+                                if (!usualStArr.containsKey(nextState.getNumber())) {
+                                    usualStArr.put(nextState.getNumber(), nextState);
+                                }
+                            }
+                        }
                     }
-                    currentState.addArr(arr);
                 }
             }
         }
@@ -82,15 +120,32 @@ public class FileReading {
 
     }
 
-    private void addState(State state, int index){
-        if(statesArr.get(index) == null){
-            statesArr.add(index, state);
+
+    private void chooseStatesType(State state){
+        if(state.isFinal()){
+            putToMap(state, finalStArr);
+        }else{
+            putToMap(state, usualStArr);
         }
     }
 
+    private void putToMap(State state, Map map){
+        if(map.containsKey(state.getNumber())){
+            state = (State) map.get(state.getNumber());
+        }else{
+            map.put(state.getNumber(), state);
+        }
+    }
+
+
     public void printResult(){
-        for(State st : statesArr){
-            st.printResult();
+        System.out.println("usual states");
+        for(Map.Entry<Integer, State> st : usualStArr.entrySet()){
+            st.getValue().printResult();
+        }
+        System.out.println("final states");
+        for(Map.Entry<Integer, State> st : finalStArr.entrySet()){
+            st.getValue().printResult();
         }
     }
 
