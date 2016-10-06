@@ -12,4 +12,19 @@ public class Word {
     }
 
 
+    public void setWord(String word) {
+        this.word = word;
+    }
+
+    public void setArray(Object[][] array) {
+        this.array = array;
+    }
+
+    public String getWord() {
+        return word;
+    }
+
+    public Object[][] getArray() {
+        return array;
+    }
 }

@@ -3,6 +3,7 @@ package pack;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -25,7 +26,7 @@ public class MachineGraph {
     Matcher matcherFirstName;
     Matcher matcherSecondName;
     Matcher matcherNum;
-    Matcher matcherChar;
+    private Matcher matcherChar;
 
     public void readFile(String fileName){
         BufferedReader bufferedReader;
@@ -139,4 +140,45 @@ public class MachineGraph {
     public Map<Integer, State> getFinalStArr() {
         return finalStArr;
     }
+
+
+    public void readWord(String word){
+        char chars[] = word.toCharArray();
+        int lines = chars.length + 2;
+        int cols = usualStArr.size() + finalStArr.size();
+        Object array[][] = new Object[lines][cols];
+        for(int i = 0; i < lines; i++){
+            for(int j = 0; j < usualStArr.size(); j++){
+                array[i][j] = usualStArr.get(j);
+            }
+            for(i)
+        }
+
+        for(int i = 0; i< lines - 2; i++){
+            if(readSym(chars[i], i) != null){
+                continue;
+            }else{
+                System.out.println("COULDN'T READ WORD " + word);
+                break;
+            }
+        }
+
+
+
+
+    }
+
+    protected State readSym(char ch, State currState, Object ar[][]){
+        State state = usualStArr.get(currState.getNumber());
+        ArrayList<ArrayList> passages = state.getPassages();
+
+        for(int i = 0; i < passages.size(); i++){
+            ArrayList pas = passages.get(i);
+            if(Character.toString(ch).equals(pas.get(0))){
+
+            }
+        }
+        return state;
+    }
+
 }
