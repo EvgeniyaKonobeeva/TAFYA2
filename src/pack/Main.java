@@ -8,5 +8,7 @@ public class Main {
         MachineGraph fr = new MachineGraph();
         fr.readFile("C:\\Users\\Evgenia\\IdeaProjects\\TAFYA2\\src\\files\\var1");
         fr.printResult();
+//        fr.readWord("/a,;\"e");
+        fr.readWord("a,;,7");
     }
 }

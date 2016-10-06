@@ -37,7 +37,9 @@ public class State {
         for(int i = 0; i < passages.size(); i++){
             ArrayList arr1 = passages.get(i);
             if(arr1.get(0) == arr[0]){
-                arr1.add(arr[1]);
+                if(!arr1.contains(arr[1])){
+                    arr1.add(arr[1]);
+                }
                 found = true;
                 break;
             }
@@ -75,7 +77,7 @@ public class State {
     @Override
     public boolean equals(Object obj) {
         State st = (State) obj;
-        if(st.name.equals(this.name) && st.final_s == this.final_s){
+        if(st.name.equals(this.name) && st.final_s == this.final_s && st.number == this.number){
             return true;
         }
         return false;
@@ -84,5 +86,10 @@ public class State {
     @Override
     public int hashCode() {
         return name.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return this.name + this.number;
     }
 }
