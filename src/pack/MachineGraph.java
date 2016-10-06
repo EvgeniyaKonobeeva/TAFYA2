@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 /**
  * Created by Evgenia on 02.10.2016.
  */
-public class FileReading {
+public class MachineGraph {
     private Map<Integer, State> usualStArr = new HashMap<>();
     private Map<Integer, State> finalStArr = new HashMap<>();
 
@@ -120,7 +120,6 @@ public class FileReading {
 
     }
 
-
     public void printResult(){
         System.out.println("usual states");
         for(Map.Entry<Integer, State> st : usualStArr.entrySet()){
@@ -132,4 +131,12 @@ public class FileReading {
         }
     }
 
+
+    public Map<Integer, State> getUsualStArr() {
+        return usualStArr;
+    }
+
+    public Map<Integer, State> getFinalStArr() {
+        return finalStArr;
+    }
 }

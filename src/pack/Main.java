@@ -5,7 +5,7 @@ package pack;
  */
 public class Main {
     public static void main(String[] args) {
-        FileReading fr = new FileReading();
+        MachineGraph fr = new MachineGraph();
         fr.readFile("C:\\Users\\Evgenia\\IdeaProjects\\TAFYA2\\src\\files\\var1");
         fr.printResult();
     }
